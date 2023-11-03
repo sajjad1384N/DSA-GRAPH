@@ -2,24 +2,19 @@
 using namespace std;
 #include<vector>
 #include<queue>
-bool check(int start,int V,vector<int>adj[],int color[]){
-    color[start]=0;
-    queue<int>q;
-    q.push(start);
-    while(!q.empty()){
-        int node=q.front();
-        q.pop();
-        for(auto it:adj[node]){
-            if(color[it]==-1){
-                color[it]=!color[node];
-                q.push(it);
-            }
-            else if(color[it]==color[node]){
-                return false;
-            }
+bool dfs(int node,int col,vector<int>adj[],int color[]){
+    color[node]=col;
+    for(auto it:adj[node]){
+        if(color[it]==-1){
+           if (dfs(it,!col,adj,color)==false) return false;
+        }
+        else if(color[it]==col){
+               return false;
         }
     }
+
     return true;
+    
 }
     bool bipartite(){
         int V;
@@ -42,7 +37,7 @@ bool check(int start,int V,vector<int>adj[],int color[]){
 	    }
 	    for(int i=0;i<V;i++){
 	        if(color[i]==-1){
-	            if(check(i,V,adj,color)==false){
+	            if(dfs(i,0,adj,color)==false){
 	                return false;
 	            }
                 else{
